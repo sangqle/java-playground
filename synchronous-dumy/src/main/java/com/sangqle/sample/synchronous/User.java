@@ -1,4 +1,4 @@
-package com.sangqle.sample;
+package com.sangqle.sample.synchronous;
 
 public class User {
     private int id;

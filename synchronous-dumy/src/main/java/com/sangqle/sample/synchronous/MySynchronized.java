@@ -1,4 +1,4 @@
-package com.sangqle.sample;
+package com.sangqle.sample.synchronous;
 
 import java.util.HashMap;
 
