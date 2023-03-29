@@ -2,8 +2,14 @@ package com.sangqle.sample.reflection;
 import org.objectweb.asm.*;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestMyReflection {
+    public void getUserId() {
+
+
+    }
     public static void main(String[] args) throws Exception {
         Class<MyReflection> myReflectionClass = MyReflection.class;
         Method[] methods = myReflectionClass.getDeclaredMethods();
@@ -26,6 +32,9 @@ public class TestMyReflection {
 
         System.err.println("\nInvoke private method2 without invoke check isValidPin inside method2");
         method2.invoke(instance, 44533); // isValidPin will now always return true
+
+        List<Integer> arrays = new ArrayList<>();
+
     }
 
     // A class that uses ASM to modify the bytecode of the isValidPin method

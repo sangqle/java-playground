@@ -1,7 +1,6 @@
 package com.sangqle.sample.synchronous;
 
 import java.util.HashMap;
-
 public class MySynchronized {
 
     private static MySynchronized instance = new MySynchronized();
@@ -16,6 +15,7 @@ public class MySynchronized {
     public synchronized void increment() {
         count++;
         System.out.println("Incremented count to " + count);
+        
     }
 
     public static void setInstance(MySynchronized instance) {
