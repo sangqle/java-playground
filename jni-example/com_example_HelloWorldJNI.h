@@ -23,6 +23,30 @@ JNIEXPORT void JNICALL Java_com_example_HelloWorldJNI_sayHello
 JNIEXPORT jint JNICALL Java_com_example_HelloWorldJNI_add
   (JNIEnv *, jobject, jint, jint);
 
+/*
+ * Class:     com_example_HelloWorldJNI
+ * Method:    getUserInfo
+ * Signature: (I)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_example_HelloWorldJNI_getUserInfo
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     com_example_HelloWorldJNI
+ * Method:    sayHelloToMe
+ * Signature: (Ljava/lang/String;Z)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_example_HelloWorldJNI_sayHelloToMe
+  (JNIEnv *, jobject, jstring, jboolean);
+
+/*
+ * Class:     com_example_HelloWorldJNI
+ * Method:    getCpuInfo
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_example_HelloWorldJNI_getCpuInfo
+  (JNIEnv *, jobject);
+
 #ifdef __cplusplus
 }
 #endif
