@@ -16,6 +16,8 @@ dependencies {
     implementation "org.ow2.asm:asm-util:9.2"
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.so'])
     implementation files('libs/libmynative.so')
+    implementation 'org.hibernate:hibernate-core:5.5.7.Final'
+    implementation 'mysql:mysql-connector-java:8.0.27'
 }
 
 test {

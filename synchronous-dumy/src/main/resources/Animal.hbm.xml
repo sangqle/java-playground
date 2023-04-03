@@ -1,0 +1,14 @@
+<hibernate-mapping>
+    <class name="com.sangqle.sample.hibernate.Animal" table="Animals">
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        <property name="name" type="string">
+            <column name="name" />
+        </property>
+        <property name="value" type="int">
+            <column name="value" />
+        </property>
+    </class>
+</hibernate-mapping>
