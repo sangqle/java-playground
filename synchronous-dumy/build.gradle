@@ -18,6 +18,9 @@ dependencies {
     implementation files('libs/libmynative.so')
     implementation 'org.hibernate:hibernate-core:5.5.7.Final'
     implementation 'mysql:mysql-connector-java:8.0.27'
+    implementation 'junit:junit:4.13.2'
+    implementation 'org.hibernate:hibernate-ehcache:5.6.10.Final'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
 }
 
 test {

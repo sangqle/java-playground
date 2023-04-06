@@ -3,6 +3,7 @@ package com.sangqle.sample.hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.stat.Statistics;
 
 public class HibernateUtil {
     private static final SessionFactory sessionFactory = buildSessionFactory();
@@ -21,6 +22,12 @@ public class HibernateUtil {
 
     public static SessionFactory getSessionFactory() {
         return sessionFactory;
+    }
+
+    public static long getNumberConnection() {
+        Statistics statistics = sessionFactory.getStatistics();
+        System.err.println("statistics: " + statistics);
+        return statistics.getSessionOpenCount();
     }
 
     public static void main(String[] args) {

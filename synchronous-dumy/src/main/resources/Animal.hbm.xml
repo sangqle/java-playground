@@ -1,5 +1,6 @@
 <hibernate-mapping>
     <class name="com.sangqle.sample.hibernate.Animal" table="Animals">
+        <cache usage="read-write" />
         <id name="id" type="long">
             <column name="id" />
             <generator class="native" />

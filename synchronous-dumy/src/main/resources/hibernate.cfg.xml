@@ -9,7 +9,15 @@
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">root</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.connection.pool_size">200</property>
 
+        <!-- Enable logging for second level cache -->
+        <property name="hibernate.generate_statistics">true</property>
+        <!-- Enable second level cache -->
+        <property name="hibernate.cache.use_second_level_cache">true</property>
+
+        <!-- Configure a caching provider -->
+        <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
         <mapping resource="Animal.hbm.xml" />
     </session-factory>
 </hibernate-configuration>
