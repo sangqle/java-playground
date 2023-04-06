@@ -1,12 +1,12 @@
 package com.sangqle.sample.crypto;
 
+import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
+import org.bouncycastle.util.io.pem.PemObject;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.*;
 import java.security.spec.*;
-import javax.crypto.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,49 +25,77 @@ public class SignatureExample {
         }
     }
 
-    private static void writeKeysToFile() throws NoSuchAlgorithmException {
+    private static void writeKeysToFile(String publicKeyFilePath, String privateKeyFilePath) throws NoSuchAlgorithmException, IOException {
         // Generate a new key pair
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(2048);
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
 
-        // Convert the private key to Base64 encoded string
+        // Convert the private key to PEM format
         PrivateKey privateKey = keyPair.getPrivate();
-        String privateKeyString = Base64.getEncoder().encodeToString(privateKey.getEncoded());
+        byte[] pkcs8Encoded = privateKey.getEncoded();
+        PemObject pemObject = new PemObject("PRIVATE KEY", pkcs8Encoded);
+        StringWriter privateKeyWriter = new StringWriter();
+        JcaPEMWriter pemPrivateKeyWriter = new JcaPEMWriter(privateKeyWriter);
+        pemPrivateKeyWriter.writeObject(pemObject);
+        pemPrivateKeyWriter.close();
 
         // Write the private key to file
-        try {
-            Files.write(Paths.get("private_key.txt"), privateKeyString.getBytes(StandardCharsets.UTF_8));
+        File privateKeyFile = new File(privateKeyFilePath);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(privateKeyFile))) {
+            writer.write(privateKeyWriter.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        // Convert the public key to Base64 encoded string
+        // Convert the public key to PEM format
         PublicKey publicKey = keyPair.getPublic();
-        String publicKeyString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+        StringWriter publicKeyWriter = new StringWriter();
+        JcaPEMWriter pemPublicKeyWriter = new JcaPEMWriter(publicKeyWriter);
+        pemPublicKeyWriter.writeObject(publicKey);
+        pemPublicKeyWriter.close();
 
         // Write the public key to file
-        try {
-            Files.write(Paths.get("public_key.txt"), publicKeyString.getBytes(StandardCharsets.UTF_8));
+        File publicKeyFile = new File(publicKeyFilePath);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(publicKeyFile))) {
+            writer.write(publicKeyWriter.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        System.out.println("Keys written to files");
+
+    private static PublicKey readPublicKeyFromFile(String filename) throws Exception {
+        String publicKeyPEM = "";
+        BufferedReader reader = new BufferedReader(new FileReader(filename));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if (!line.startsWith("-----")) {
+                publicKeyPEM += line.trim();
+            }
+        }
+        reader.close();
+
+        byte[] decoded = Base64.getDecoder().decode(publicKeyPEM);
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        return keyFactory.generatePublic(spec);
     }
 
     private static PrivateKey readPrivateKeyFromFile(String filename) throws Exception {
-        byte[] keyBytes = Files.readAllBytes(Paths.get(filename));
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(keyBytes));
+        String privateKeyPEM = "";
+        BufferedReader reader = new BufferedReader(new FileReader(filename));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if (!line.startsWith("-----")) {
+                privateKeyPEM += line.trim();
+            }
+        }
+        reader.close();
+        byte[] encoded = Base64.getDecoder().decode(privateKeyPEM);
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(encoded);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         return keyFactory.generatePrivate(spec);
-    }
-
-    private static PublicKey readPublicKeyFromFile(String filename) throws Exception {
-        byte[] keyBytes = Files.readAllBytes(Paths.get(filename));
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(Base64.getDecoder().decode(keyBytes));
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        return keyFactory.generatePublic(spec);
     }
 
     private static byte[] sign(byte[] data, PrivateKey privateKey) throws Exception {
@@ -133,10 +161,10 @@ public class SignatureExample {
     }
 
     public static void main(String[] args) throws Exception {
+        writeKeysToFile("public_key.pem", "private_key.pem");
         // Generate a public-private key pair
-//        writeKeysToFile();
-        PrivateKey privateKey = readPrivateKeyFromFile("private_key.txt");
-        PublicKey publicKey = readPublicKeyFromFile("public_key.txt");
+        PublicKey publicKey = readPublicKeyFromFile("public_key.pem");
+        PrivateKey privateKey = readPrivateKeyFromFile("private_key.pem");
 
         String message = buildHash(new HashMap<String, Object>() {{
             put("a", 1);
