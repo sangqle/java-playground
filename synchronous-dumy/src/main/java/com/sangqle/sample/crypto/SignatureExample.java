@@ -161,10 +161,13 @@ public class SignatureExample {
     }
 
     public static void main(String[] args) throws Exception {
-        writeKeysToFile("public_key.pem", "private_key.pem");
+        String publicKeyFilePath = "public_key.pem";
+        String privateKeyFilePath = "private_key.pem";
+
         // Generate a public-private key pair
-        PublicKey publicKey = readPublicKeyFromFile("public_key.pem");
-        PrivateKey privateKey = readPrivateKeyFromFile("private_key.pem");
+        writeKeysToFile(publicKeyFilePath, privateKeyFilePath);
+        PublicKey publicKey = readPublicKeyFromFile(publicKeyFilePath);
+        PrivateKey privateKey = readPrivateKeyFromFile(privateKeyFilePath);
 
         String message = buildHash(new HashMap<String, Object>() {{
             put("a", 1);
@@ -176,7 +179,7 @@ public class SignatureExample {
         byte[] signature = sign(message.getBytes(StandardCharsets.UTF_8), privateKey);
 
         String signatureString = Base64.getEncoder().encodeToString(signature);
-        System.out.println("Signature: " + signatureString);
+        System.err.println("Signature: " + signatureString);
 
         // Verify the signature using the public key
         boolean verified = verifyAndPrint(message.getBytes(StandardCharsets.UTF_8), signature, publicKey);
