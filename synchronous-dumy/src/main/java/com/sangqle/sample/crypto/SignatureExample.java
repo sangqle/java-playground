@@ -24,7 +24,6 @@ public class SignatureExample {
             fos.write(publicKey.getEncoded());
         }
     }
-
     private static void writeKeysToFile(String publicKeyFilePath, String privateKeyFilePath) throws NoSuchAlgorithmException, IOException {
         // Generate a new key pair
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
